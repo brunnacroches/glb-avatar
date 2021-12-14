@@ -7,9 +7,7 @@ const statsEnabled = true;
 
 			let container, stats, loader, clock;
 
-			let camera, scene, renderer, elf;
-
-			let mesh;
+			let camera, scene, renderer, elf, mesh;
 
 			let spotLight;
 
@@ -27,11 +25,11 @@ const statsEnabled = true;
 
 			function init() {
 
-				container = document.createElement('container');
-				document.body.appendChild(container);
+				container = document.getElementById('container');
+				// document.body.appendChild(container);
 
 			  camera = new THREE.PerspectiveCamera( 75,  window.innerWidth / window.innerHeight, 1, 10000)
-        camera.position.set(0,1,3)
+        camera.position.set(1, 1, 4)
         
         clock = new THREE.Clock();
 				scene = new THREE.Scene();
@@ -49,8 +47,8 @@ const statsEnabled = true;
 
 				scene.add( new THREE.HemisphereLight( 0x443333, 0x111122 ) );
 
-				spotLight = new THREE.SpotLight( 0xffffbb, 2 );
-				spotLight.position.set( 0.5, 0, 1 );
+				spotLight = new THREE.SpotLight( 0xffffbb,2 );
+				spotLight.position.set( 5,5,5);
 				spotLight.position.multiplyScalar( 700 );
 				scene.add( spotLight );
 
@@ -78,14 +76,14 @@ const statsEnabled = true;
 				} );
 
                   // ADD O ARQUIVO GLB 
-          loader = new GLTFLoader()
+          loader = new GLTFLoader(loadingManager)
           loader.load('assets/my--avatar.glb', function(glb){
-              createScene(glb.scene.children[ 0 ].geometry, 100, material );
+              // createScene(glb.scene.mesh, 100, material );
               
-              const children = glb.scene;
-              children.scale.set(0.2, 0.2, 0.2)
-              scene.add(children);
+              mesh = glb.scene;
               elf = glb.scene;
+              mesh.scale.set(0.2, 0.2, 0.2)
+              scene.add(mesh);
           })
 
 
@@ -113,19 +111,23 @@ const statsEnabled = true;
 
 			}
 
-			function createScene( geometry, scale, material) {
 
-				mesh = new THREE.Mesh( geometry, material );
+      const controls = new OrbitControls(camera, renderer.domElement)
+      controls.enableDamping = true
 
-				mesh.position.y = - 50;
-				mesh.scale.set( scale, scale, scale );
+			// function createScene( geometry, scale, material) {
 
-				mesh.castShadow = true;
-				mesh.receiveShadow = true;
+			// 	mesh = new THREE.Mesh( geometry, material );
 
-				scene.add( mesh );
+			// 	mesh.position.y = - 50;
+			// 	mesh.scale.set( scale, scale, scale );
 
-			}
+			// 	mesh.castShadow = true;
+			// 	mesh.receiveShadow = true;
+
+			// 	scene.add( mesh );
+
+			// }
 
 			//
 
@@ -172,129 +174,10 @@ const statsEnabled = true;
 
 				if ( elf !== undefined ) {
 
-					elf.rotation.z += delta * 0.5;
+					elf.rotation.y += delta * 0.2;
 
 				}
 
 				renderer.render( scene, camera );
 
 			}
-// init();
-// animate();
-
-// function init () {
-//   container = document.createElement( 'div' );
-// 	document.body.appendChild( container );
-// }
-
-// // CRIANDO A CENA
-// const canvas = document.querySelector('.webgl')
-// const scene = new THREE.Scene()
-
-
-// // CRIAR LUZ NA CENA
-// const light = new THREE.SpotLight()
-// light.position.set(5, 5, 5)
-// // scene.add(light)
-
-// // COR DO FUNDO
-// scene.background = new THREE.Scene();
-
-// // ILUMINAÇÃO AVATAR
-// const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
-// hemiLight.color.setHSL( 0.6, 1, 0.6 );
-// hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-// hemiLight.position.set( 0, 50, 0 );
-// scene.add( light );
-
-// const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
-// scene.add( hemiLightHelper );
-// // FIM ILUMINAÇÃO AVATAR
-
-
-// const dirLight = new THREE.DirectionalLight();
-// dirLight.color.setHSL( 0.1, 1, 0.95 );
-// dirLight.position.set( - 1, 1.75, 1 );
-// dirLight.position.multiplyScalar( 30 );
-// scene.add(dirLight);
-
-// dirLight.castShadow = true;
-
-// dirLight.shadow.mapSize.width = 2048;
-// dirLight.shadow.mapSize.height = 2048;
-
-// const d = 50;
-
-// dirLight.shadow.camera.left = - d;
-// dirLight.shadow.camera.right = d;
-// dirLight.shadow.camera.top = d;
-// dirLight.shadow.camera.bottom = - d;
-
-// dirLight.shadow.camera.far = 3500;
-// dirLight.shadow.bias = - 0.0001;
-
-// const dirLightHelper = new THREE.DirectionalLightHelper( dirLight, 10 );
-// scene.add( dirLightHelper );
-
-
-// //Boiler Plate Code 
-// const sizes = {
-//   width: window.innerWidth, 
-//   height: window.innerHeight
-// }
-
-// const camera = new THREE.PerspectiveCamera( 75, sizes.width/sizes.height, 0.1, 100)
-// camera.position.set(0,1,3)
-// scene.add(camera)
-
-// // RENDER
-// const renderer = new THREE.WebGL1Renderer ({
-//   canvas : canvas,
-//   alpha: true
-// })
-
-// renderer.setClearColor( 0xffffff, 0 ); // second param is opacity, 0 => transparent
-// renderer.setSize(sizes.width, sizes.height)
-// renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-// renderer.shadowMap.enabled = true 
-// renderer.gammaOutput = true 
-// renderer.render(scene, camera)
-
-
-// const controls = new OrbitControls(camera, renderer.domElement)
-// controls.enableDamping = true
-
-
-// //código que irá redimensionar a tela para corresponder o tamanho de exibição
-// function resizeCanvasToDisplaySize() {
-//   const canvas = renderer.domElement;
-//   const width = canvas.clientWidth;
-//   const height = canvas.clientHeight;
-//   if (canvas.width !== width ||canvas.height !== height) {
-//     // you must pass false here or three.js sadly fights the browser
-//     renderer.setSize(width, height, true);
-//     camera.aspect = width / height;
-//     camera.updateProjectionMatrix();
-//     // set render target sizes here
-//   }
-// }
-// // ADD O ARQUIVO GLB 
-// const loader = new GLTFLoader()
-// loader.load('assets/my--avatar.glb', function(glb){
-//     console.log(glb)
-//     const root = glb.scene;
-//     root.scale.set(0.2, 0.2, 0.2)
-
-//     scene.add(root);
-// }, function(xhr){
-//     console.log((xhr.loaded/xhr.total * 100) + "% loaded")
-// }, function(error){
-//     console.log('An error occurred')
-// })
-
-
-// function animate (){
-//   requestAnimationFrame(animate)
-//   renderer.render(scene, camera)
-// }
-// animate()
