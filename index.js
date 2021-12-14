@@ -17,8 +17,8 @@ const statsEnabled = true;
 		let targetX = 0;
 		let targetY = 0;
 
-		const windowHalfX = window.innerWidth / 2;
-		const windowHalfY = window.innerHeight / 2;
+		const windowHalfX = window.innerWidth;
+		const windowHalfY = window.innerHeight;
 
 			init();
 			animate();
@@ -28,9 +28,9 @@ const statsEnabled = true;
 				container = document.getElementById('container');
 				// document.body.appendChild(container);
 
-			  camera = new THREE.PerspectiveCamera( 75,  window.innerWidth / window.innerHeight, 1, 100)
-        camera.position.set(1, 1, 4)
-				camera.lookAt( 0, 3, 0 );
+			  camera = new THREE.PerspectiveCamera( 75,  window.innerWidth / window.innerHeight, 0.1, 100)
+        camera.position.z = 5;
+				// camera.lookAt( 0, 0, 0);
         
         clock = new THREE.Clock();
 				scene = new THREE.Scene();
@@ -55,10 +55,7 @@ const statsEnabled = true;
 				
 
 				spotLight.castShadow = true;
-
-				spotLight.shadow.mapSize.width = 1000;
-				spotLight.shadow.mapSize.height = 1000;
-
+				
 				spotLight.shadow.camera.near = 1000;
 				spotLight.shadow.camera.far = 1000;
 
@@ -69,8 +66,8 @@ const statsEnabled = true;
                   // ADD O ARQUIVO GLB 
           loader = new GLTFLoader(loadingManager)
           loader.load('assets/my--avatar.glb', function(glb){
-              createScene(glb.scene.mesh, 100 );
-              createScene(glb.scene.elf, 100 );
+              createScene(glb.scene.mesh );
+              createScene(glb.scene.elf );
               mesh = glb.scene;
               elf = glb.scene;
               mesh.scale.set(0.2, 0.2, 0.2)
@@ -99,28 +96,28 @@ const statsEnabled = true;
 				// EVENTS
 
 				window.addEventListener( 'mousemove', onWindowMouseMove );
-				window.addEventListener( 'resize', onWindowResize );
+				window.addEventListener( 'resize', onWindowResize);
 
 			}
 
       const controls = new OrbitControls(camera, renderer.domElement)
 			controls.enableDamping = false
-			controls.enableZoom= true
-			controls.enablePan= true
+			controls.enableZoom= false
+			controls.enablePan= false
 			controls.dampingFactor= false
 			controls.minDistance= 4
 			controls.maxDistance= 5
-			// controls.autoRotate
+			controls.autoRotate = false
 			// 		controls.zoomSpeed= 10
 			// 		controls.autoRotateSpeed= 0.5
 			// 		controls.rotateSpeed= -1.4
 
-			function createScene( geometry, scale, material) {
+			function createScene( geometry, scale ) {
 
-				mesh = new THREE.Mesh( geometry, material );
+				mesh = new THREE.Mesh( geometry );
 
 				mesh.position.y = -50;
-				mesh.scale.set( scale, scale, scale );
+				mesh.scale.set( scale );
 
 				mesh.castShadow = true;
 				mesh.receiveShadow = true;
@@ -160,13 +157,13 @@ const statsEnabled = true;
 
 			function render() {
 
-				targetX = mouseX * .001;
-				targetY = mouseY * .001;
+				targetX = mouseX * 0.001;
+				targetY = mouseY * 0.0001;
 
 				if ( mesh ) {
 
-					mesh.rotation.y += 0.05 * ( targetX - mesh.rotation.y );
-					mesh.rotation.x += 0.05 * ( targetY - mesh.rotation.x );
+					mesh.rotation.y += 0.08 * ( targetX - mesh.rotation.y );
+					mesh.rotation.x += 0.08 * ( targetY - mesh.rotation.x );
 
 				}
 
@@ -174,7 +171,7 @@ const statsEnabled = true;
 
 				if ( elf !== undefined ) {
 
-					elf.rotation.y += delta * 0.2;
+					elf.rotation.y += delta * 0.1;
 
 				}
 
