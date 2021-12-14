@@ -5,9 +5,9 @@ import Stats from './three.js-master/examples/jsm/libs/stats.module.js';
 
 	const statsEnabled = true;
 
-	let container, stats, loader;
+	let container, stats, loader, clock;
 
-	let camera, scene, renderer, root;
+	let camera, scene, renderer, mousemove, autoRotate;
 
 	let spotLight;
 
@@ -16,6 +16,9 @@ import Stats from './three.js-master/examples/jsm/libs/stats.module.js';
 
 	let targetX = 0;
 	let targetY = 0;
+
+	// let autoRotate = null;
+	// let mousemove = null;
 
 	const windowHalfX = window.innerWidth / 2;
 	const windowHalfY = window.innerHeight / 2;
@@ -35,13 +38,17 @@ import Stats from './three.js-master/examples/jsm/libs/stats.module.js';
     // clock = new THREE.Clock();
 		scene = new THREE.Scene();
 		scene.background = new THREE.Color( 0x060708 );
+		clock = new THREE.Clock();
 
 				                  // ADD O ARQUIVO GLB 
     loader = new GLTFLoader()
     loader.load('assets/my--avatar.glb', function(glb) {
-        root = glb.scene;
-        root.scale.set(0.2, 0.2, 0.2)
-        scene.add(root);
+				mousemove = glb.scene;
+				autoRotate = glb.scene;
+        mousemove.scale.set(0.2, 0.2, 0.2)
+				autoRotate.scale.set(0.2, 0.2, 0.2)
+        scene.add(mousemove);
+				scene.add(autoRotate);
       
 			});
 				// LIGHTS
@@ -90,21 +97,18 @@ import Stats from './three.js-master/examples/jsm/libs/stats.module.js';
 		controls.dampingFactor= false
 		controls.minDistance= 4
 		controls.maxDistance= 5
-		controls.autoRotate
-				// controls.zoomSpeed= 10
-				// controls.autoRotateSpeed= 0.5
-				// controls.rotateSpeed= -1.4
+		// controls.autoRotate
+		// 		controls.zoomSpeed= 10
+		// 		controls.autoRotateSpeed= 0.5
+		// 		controls.rotateSpeed= -1.4
 
 				// if ( statsEnabled ) {
 
-								// EVENTS
-				// resize = redimensionar  
-
-		window.addEventListener( 'mousemove', onWindowMouseMove );
-		window.addEventListener( 'resize', onWindowResize );
+						
 }
-				//
-			
+
+							// EVENTS
+				// resize = redimensionar  
 	function onWindowResize() {
 
 		camera.aspect = window.innerWidth / window.innerHeight;
@@ -112,43 +116,67 @@ import Stats from './three.js-master/examples/jsm/libs/stats.module.js';
 				
 		renderer.setSize( window.innerWidth, window.innerHeight );
 }
- 
-	function onWindowMouseMove( event ) {
 
-		event.preventDefault();
+		autoRotate = true;
+		mousemove = true;
+
+		// const autoRotate = autoRotate;
+		// const mousemove = mousemove;
+
+		window.addEventListener( 'resize', onWindowResize );
+		window.addEventListener( 'mousemove', onWindowMouseMove);
+		window.addEventListener( 'autoRotate', onWindowAutoRotate);
+
+
+	function onWindowAutoRotate (event) {
+
+		autoRotate = true;
+		mousemove = false;
+		console.log("Auto Rotate");
+
 		mouseX = ( event.clientX - windowHalfX );
 		mouseY = ( event.clientY - windowHalfY );
 
 	}
+
+	function onWindowMouseMove(event) {
+		autoRotate = false;
+		mousemove = true;
+		console.log("Mouse Move");
+
+		mouseX = ( event.clientX - windowHalfX );
+		mouseY = ( event.clientY - windowHalfY );
+		
+	}
 			//
-
 	function animate() {
-
+		
 		requestAnimationFrame( animate );
-
 		render();
-		if ( statsEnabled );
-    stats.update();
-
+		// stats.update();
+		
 	}
 
 	function render() {
 
+		const delta = clock.getDelta();
+
 		targetX = mouseX * .001;
 		targetY = mouseY * .001;
 
-		if ( root ) {
-
-			root.rotation.y += 0.25 * ( targetX - root.rotation.y );
-			root.rotation.x += 0.25 * ( targetY - root.rotation.x );
-
-		if ( root ) {
-						// root.rotation.y += delta * 0.2;
-	
-			root.rotation.y += 0.2 * (targetX - root.rotation.y);
-			} else 
-				root.rotation.y = time 
-					
-		renderer.render( scene, camera );
-		}
+		if ( autoRotate ) {	
+				autoRotate.rotation.y += delta * 0.5;
 }
+		if (mousemove ) {
+				mousemove.rotation.y += delta * 0.0;
+}
+//
+		if ( mousemove ) {
+				mousemove.rotation.y += 0.25 *  ( targetX - mousemove.rotation.y );
+				mousemove.rotation.x += 0.25 *  ( targetY - mousemove.rotation.x );
+		} else {
+				mousemove.rotation.y += 0.0;
+}
+		//
+		renderer.render( scene, camera );
+};
