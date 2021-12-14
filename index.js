@@ -26,10 +26,10 @@ const statsEnabled = true;
 			function init() {
 
 				container = document.getElementById('container');
-				// document.body.appendChild(container);
+				document.body.appendChild(container);
 
 			  camera = new THREE.PerspectiveCamera( 75,  window.innerWidth / window.innerHeight, 0.1, 100)
-        camera.position.z = 5;
+        camera.position.z = 4;
 				// camera.lookAt( 0, 0, 0);
         
         clock = new THREE.Clock();
@@ -49,17 +49,17 @@ const statsEnabled = true;
 				scene.add( new THREE.HemisphereLight( 0x443333, 0x111122 ) );
 
 				spotLight = new THREE.SpotLight( 0xffffbb );
-				spotLight.position.set(1,1,1);
+				spotLight.position.set(0.1,0.1,0.1);
 				spotLight.position.multiplyScalar( 100 );
 				scene.add( spotLight );
 				
 
 				spotLight.castShadow = true;
 				
-				spotLight.shadow.camera.near = 1000;
-				spotLight.shadow.camera.far = 1000;
+				spotLight.shadow.camera.near = 1;
+				spotLight.shadow.camera.far = 1;
 
-				spotLight.shadow.camera.fov = 40;
+				spotLight.shadow.camera.fov = 1;
 
 				spotLight.shadow.bias = - 0.005;
 
@@ -80,8 +80,6 @@ const statsEnabled = true;
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
-
-				renderer.shadowMap.enabled = true;
 				renderer.outputEncoding = THREE.sRGBEncoding;
 
 				//
@@ -101,10 +99,10 @@ const statsEnabled = true;
 			}
 
       const controls = new OrbitControls(camera, renderer.domElement)
-			controls.enableDamping = false
-			controls.enableZoom= false
-			controls.enablePan= false
-			controls.dampingFactor= false
+			controls.enableDamping = true
+			controls.enableZoom= true
+			controls.enablePan= true
+			controls.dampingFactor= true
 			controls.minDistance= 4
 			controls.maxDistance= 5
 			controls.autoRotate = false
@@ -116,11 +114,11 @@ const statsEnabled = true;
 
 				mesh = new THREE.Mesh( geometry );
 
-				mesh.position.y = -50;
+				mesh.position.y = 10;
 				mesh.scale.set( scale );
 
-				mesh.castShadow = true;
-				mesh.receiveShadow = true;
+				mesh.castShadow = false;
+				mesh.receiveShadow = false;
 
 				scene.add( mesh );
 

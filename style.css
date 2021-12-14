@@ -1,11 +1,13 @@
-html {
+/* /* html {
   box-sizing: border-box;
-}
+} */
 *, *:before, *:after {
   box-sizing: inherit;
 }
 body { margin: 0; }
-.outer {
+
+
+/* .outer {
 }
 .frame { 
   display: flex;
@@ -13,9 +15,9 @@ body { margin: 0; }
   height: 100vh;
 }
 .frame>* {
-  flex: 1 1 50%;
+  flex: 1 1 50%; */
   /* flex: 50% 1 1; */
-}
+/* }
 #editor {
   font-family: monospace;
   padding: .5em;
