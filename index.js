@@ -172,7 +172,7 @@ const statsEnabled = true;
 
 				if ( elf !== undefined ) {
 
-					elf.rotation.z += delta * 0.5;
+					elf.rotation.y += delta * 0.5;
 
 				}
 
